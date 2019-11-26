@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.datasets import make_moons
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-from activation import IdentityActivator, SigmoidActivator, TanhActivator, ReluActivator
+from activation import IdentityActivator, SigmoidActivator, TanhActivator, ReluActivator, SoftmaxActivator
 from utils import init_weight
 
 class Layer(object):
@@ -19,11 +19,14 @@ class Layer(object):
             self.activator = TanhActivator()
         elif activation is "relu":
             self.activator = ReluActivator()
+        elif activation is "softmax":
+            self.activator = SoftmaxActivator()
         else:
             raise Exception('Non-supported activation function')
         
         # 初始化权重矩阵，偏置项
-        self.W, self.b = init_weight(input_dim, output_dim)
+        self.W = init_weight(self.output_dim, self.input_dim)
+        self.b = init_weight(self.output_dim, 1)
 
     # 单层的前向传播
     def forward(self, A_prev):

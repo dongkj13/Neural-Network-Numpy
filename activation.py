@@ -31,3 +31,14 @@ class ReluActivator(object):
     
     def backward(self, x):
         return 1.0 * (x > 0)
+
+class SoftmaxActivator(object):
+    def forward(self, x):
+        # 假设输入维度[dim, 1]，即只有一个sample
+        s = np.sum(np.exp(x), 0).reshape(1, x.shape[1])
+        return np.exp(x) / s
+    
+    def backward(self, x):
+        # 假设输入维度[dim, 1]，即只有一个sample
+        deriv = np.diag(x[:, 0]) - np.dot(x, x.T)
+        return deriv
